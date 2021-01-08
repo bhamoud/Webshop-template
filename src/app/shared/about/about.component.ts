@@ -7,7 +7,7 @@ import { fallIn, moveIn } from '../router.animations';
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.scss'],
   animations: [moveIn(), fallIn()],
-  host: {'[@moveIn()]': ''}
+  host: {'[@moveIn]': ''}
 })
 export class AboutComponent implements OnInit {
   state: string = '';

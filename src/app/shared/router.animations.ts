@@ -35,4 +35,4 @@ export function moveInLeft() {
       animate('.6s .2s ease-in-out', style({opacity:'1', transform: 'translateX(0)'}))
     ])
   ]);
-} 
+}

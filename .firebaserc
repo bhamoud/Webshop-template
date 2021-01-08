@@ -1,0 +1,21 @@
+{
+  "targets": {
+    "ubiofarm": {
+      "hosting": {
+        "Webshop-template": [
+          "ubiofarm"
+        ]
+      }
+    },
+    "webshop-template-ac0ac": {
+      "hosting": {
+        "Webshop-template": [
+          "webshop-template-ac0ac"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "webshop-template-ac0ac"
+  }
+}
