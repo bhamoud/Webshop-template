@@ -123,23 +123,23 @@ export class AdminordersComponent implements OnInit, OnDestroy {
         if (confirm("Are you sure you want to delete this record?")) {
             this.dataloading = true;
             this.querySubscription = this._backendService.delOneProductsDoc('orders', docID)
-                .subscribe(res => {
+                .then(res => {
                     if (res) {
                         this.toggle('searchMode');
                         this.dataloading = false;
                     }
-                },
-                    (error) => {
+                }).catch
+                    (error => {
                         this.error = true;
                         this.errorMessage = error.message;
                         this.dataloading = false;
-                    }, () => { this.error = false; this.dataloading = false; });
+                    });
         }
     }
 
     getFilterData(filters) {
         this.dataloading = true;
-        this.querySubscription = this._backendService.getFilterProducts('orders', filters)
+        this.querySubscription = this._backendService.getFilterDocs('orders', filters)
             .subscribe(members => {
                 this.members = members;
                 this.dataSource = new MatTableDataSource(members);

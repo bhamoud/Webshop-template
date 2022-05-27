@@ -10,6 +10,9 @@ import { fallIn, moveIn } from '../../shared/router.animations';
 })
 export class AdmintabComponent implements OnInit {
 
+  links = ['Carts', 'Orders', 'Products', 'Users'];
+  activeLink = this.links[0];
+
   constructor() { }
 
   ngOnInit(): void {

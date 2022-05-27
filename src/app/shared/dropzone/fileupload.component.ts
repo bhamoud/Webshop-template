@@ -27,7 +27,7 @@ export class FileUploadComponent {
     }
 
     startUpload(event: any) {
-        const file = event.item(0);
+        const file = event.target.files[0];
         if (file.type.split('/')[0] !== 'image') {
             this.error = true;
             console.log('unsupporterd file type');
@@ -35,7 +35,7 @@ export class FileUploadComponent {
         } else {
             this.error = false;
         }
-        const filePath = '/Onlinestore/storemanagement/products/' + localStorage.getItem('center') + '/' + this.fileUrl + '/' + new Date().getTime();
+        const filePath = '/Onlinestore/storemanagement/products/' + this.fileUrl + '/' + new Date().getTime();
         const fileRef = this._storage.ref(filePath);
         const task = this._storage.upload(filePath, file);
         this.percentage = task.percentageChanges();
@@ -44,11 +44,11 @@ export class FileUploadComponent {
         this.percentage = this.task.percentageChanges();
         this.task.snapshotChanges().pipe(
             finalize(() => {
-                //this.downloadURL = fileRef.getDownloadURL();
-                return this._backEndService.setProductPic(filePath, this.fileUrl, this.docId);
+                //this.downloadURL = fileRef.getDownloadURL();        
+                return this._backEndService.setPicData(filePath, this.fileUrl, this.docId);
             })
         ).subscribe();
-    }
+        }
 
     isActive(snapshot) {
         return snapshot.state === 'running' && snapshot.bytesTransferred < snapshot.totalBytes;

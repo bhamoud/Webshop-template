@@ -1,7 +1,7 @@
 <app-header pageTitle="Sign in" iconTitle="account_circle" helpTitle="sign in"></app-header>
 <mat-card>
 
-    <mat-progress-bar *ngIf="dataLoading" mode="indeterminate"></mat-progress-bar>
+    <mat-progress-bar *ngIf="dataloading" mode="indeterminate"></mat-progress-bar>
     <br>
 
     <div *ngIf="afAuth.user | async as user; else showLogin">
@@ -12,7 +12,7 @@
     </div>
 
     <ng-template #showLogin>
-        <mat-card-content> 
+        <mat-card-content>
             <form #formData="ngForm" (ngSubmit)="login('email',formData.value)">
 
                 <mat-card-actions *ngIf="error">
@@ -24,17 +24,20 @@
                     <input matInput placeholder="email" name="email" id="email" #email="ngModel" ngModel required email>
                 </mat-form-field>
                 <br>
-                <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">Please enter a valid email</mat-error>
+                <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">Please enter a valid email
+                </mat-error>
                 <br>
                 <mat-form-field>
-                    <input matInput type="password" placeholder="password" name="password" id="password" #password="ngModel" ngModel required minlength="5"
-                    maxlength="30">
+                    <input matInput type="password" placeholder="password" name="password" id="password"
+                        #password="ngModel" ngModel required minlength="5" maxlength="30">
                 </mat-form-field>
                 <br>
                 <span *ngIf="password.invalid && (password.dirty || password.touched)">
                     <mat-error *ngIf="password.errors['required']">Password is required</mat-error>
-                    <mat-error *ngIf="password.errors['minLength']">Password must be at least 5 characters short</mat-error>
-                    <mat-error *ngIf="password.errors['maxLength']">Password must be at most 30 characters long</mat-error>
+                    <mat-error *ngIf="password.errors['minLength']">Password must be at least 5 characters short
+                    </mat-error>
+                    <mat-error *ngIf="password.errors['maxLength']">Password must be at most 30 characters long
+                    </mat-error>
                 </span>
                 <br>
                 <mat-card-actions>
@@ -43,18 +46,25 @@
 
             </form>
         </mat-card-content>
+
         <mat-card-content>
             <mat-chip-list>
                 <mat-chip color="primary" selected="true" (click)="login('FB')">
                     Login with Facebook
                 </mat-chip>
             </mat-chip-list>
+
             <mat-chip-list>
                 <mat-chip color="warn" selected="true" (click)="login('GOOGLE')">
                     Login with Google
                 </mat-chip>
             </mat-chip-list>
+
+            <mat-chip-list>
+                <mat-chip color="accent" selected="true" routerLink="/register">
+                    Register
+                </mat-chip>
+            </mat-chip-list>
         </mat-card-content>
     </ng-template>
-
 </mat-card>

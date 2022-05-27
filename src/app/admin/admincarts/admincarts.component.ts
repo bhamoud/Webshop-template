@@ -122,24 +122,23 @@ export class AdmincartsComponent implements OnInit, OnDestroy {
     deleteDoc(docID) {
         if (confirm("Are you sure you want to delete this record?")) {
             this.dataloading = true;
-            this.querySubscription = this._backendService.delOneProductsDoc('cart', docID)
-                .subscribe(res => {
+            this.querySubscription = this._backendService.delOneProductsDoc('carts', docID)
+                .then(res => {
                     if (res) {
                         this.toggle('searchMode');
                         this.dataloading = false;
                     }
-                },
-                    (error) => {
+                }).catch
+                    (error => {
                         this.error = true;
                         this.errorMessage = error.message;
                         this.dataloading = false;
-                    }, () => { this.error = false; this.dataloading = false; });
+                    });
         }
     }
-
     getFilterData(filters) {
         this.dataloading = true;
-        this.querySubscription = this._backendService.getFilterProducts('cart', filters)
+        this.querySubscription = this._backendService.getFilterDocs('cart', filters)
             .subscribe(members => {
                 this.members = members;
                 this.dataSource = new MatTableDataSource(members);

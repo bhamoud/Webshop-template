@@ -1,0 +1,64 @@
+<app-header pageTitle="Register for an account" iconTitle="account_circle" helpTitle="register"></app-header>
+<mat-card>
+    <form #regDataForm="ngForm" (ngSubmit)="setData(regDataForm.value);" novalidate>
+        <mat-error *ngIf="savedChanges">
+            Data is saved.
+            <label class="small-spacer"></label>
+            <button mat-icon-button (click)="this.regDataForm.reset();savedChanges=false;">clear</button>
+        </mat-error>
+
+        <div>
+            <mat-progress-bar mode="indeterminate" *ngIf="dataloading"></mat-progress-bar>
+            <mat-error *ngIf="error">Error: {{ errorMessage }}
+                <button mat-icon-button (click)="error=false">clear</button>
+            </mat-error>
+            <br>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput placeholder="Name" name="name" id="name" #name="ngModel" ngModel required minlength="1">
+            </mat-form-field>
+            <br>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput placeholder="Email" name="email" id="email" #email="ngModel" ngModel required minlength="1">
+            </mat-form-field>
+            <br>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input matInput type="password" placeholder="Password" name="password" id="password" #password="ngModel" ngModel required minlength="1">
+            </mat-form-field>
+            <br>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Phone</mat-label>
+                <input matInput placeholder="Phone" name="phone" id="phone" #phone="ngModel" ngModel required minlength="1">
+            </mat-form-field>
+            <br>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Address</mat-label>
+                <input matInput placeholder="Address" name="address" id="address" #address="ngModel" ngModel required minlength="1">
+            </mat-form-field>
+            <br>
+
+            <mat-form-field appearance="outline">
+                <mat-label>House number</mat-label>
+                <input matInput placeholder="Housenr" name="hnr" id="hnr" #hnr="ngModel" ngModel required minlength="1">
+            </mat-form-field>
+            <br>
+
+            <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <input matInput placeholder="City" name="city" id="city" #city="ngModel" ngModel required minlength="1">
+            </mat-form-field>
+            <br>
+            <br>
+
+            <button type="submit" mat-raised-button [disabled]="!this.regDataForm.valid"
+                color="primary">Apply</button>
+        </div>
+    </form>
+</mat-card>

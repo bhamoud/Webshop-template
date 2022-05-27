@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { Observable, Subscription } from 'rxjs';
 import { BackendService } from 'src/app/services/backend.service';
 import { fallIn, moveIn } from '../../shared/router.animations';
 
@@ -18,15 +19,15 @@ export class ProductComponent implements OnInit {
   error: boolean = false;
   errorMessage: String = "";
   dataloading: boolean = false;
-  private querySubscription;
-  members: Observable<any>;
-  profileUrl: string;
+  private querySubscription: Subscription;
+  members: Observable<any>[];
+  profileUrl: any;
   counter: number;
   myDocData: any;
 
   // profileUrl: Observable<string | null>;
 
-  constructor(private _backendService: BackendService) { }
+  constructor(private _backendService: BackendService, private _storage: AngularFireStorage) { }
 
   ngOnInit() {
     this.getData();
@@ -34,8 +35,8 @@ export class ProductComponent implements OnInit {
 
   getFilterData(filters) {
     this.dataloading = true;
-    this.querySubscription = this._backendService.getFilterProducts('products', filters)
-      .subscribe(members => {
+    /*this.querySubscription = this._backendService.getFilterDocs('products', filters)
+      .then((members) => {
         this.members = members;
         this.dataloading = false;
       },
@@ -44,7 +45,7 @@ export class ProductComponent implements OnInit {
           this.errorMessage = error.message;
           this.dataloading = false;
         },
-        () => { this.error = false; this.dataloading = false; });
+        () => { this.error = false; this.dataloading = false; });*/
   }
 
   getData() {
@@ -62,9 +63,10 @@ export class ProductComponent implements OnInit {
         () => { this.error = false; this.dataloading = false; });
   }
 
-  getPic(picId) {
-    this.profileUrl = "";
-  }
+  getPic(picId){
+    const ref = this._storage.ref(picId);
+    this.profileUrl = ref.getDownloadURL();
+}
 
   showDetail(item) {
     this.counter = 0;
@@ -103,7 +105,8 @@ export class ProductComponent implements OnInit {
     this.dataloading = true;
     let data = item;
     data.qty = counter;
-    return this._backendService.updateShoppingCart("cart", data).then((success) => {
+    return this._backendService.updateShoppingCart("carts", data).then((success) => {
+      console.log(success);
       this.dataloading = false;
       this.counter = 0;
       this.savedChanges = true;

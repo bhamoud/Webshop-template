@@ -3,7 +3,7 @@
         <div
             *ngIf="(toggleField=='searchMode') else (toggleField=='addMode')? showAddMode : ((toggleField=='editMode')? showEditMode : showResMode)">
             <!--search product page-->
-            <form #searchFormData="ngForm" class="example-form">
+            <form #searchFormData="ngForm">
                 <mat-card-actions>
                     <button mat-fab color="primary" matTooltip="Add New" (click)="toggle('addMode');">
                         <mat-icon>add</mat-icon>
@@ -45,12 +45,13 @@
                 </mat-form-field>
                 <br>
                 <button mat-raised-button color='primary'
-                    (click)="toggle('resMode');getFilterData(searchFormData.value);"
+                    (click)="toggle('resMode');getFilterData(searchFormData.value, 'products');"
                     [disabled]="!searchFormData.valid">Search</button>
             </form>
         </div>
     </mat-card-content>
 </mat-card>
+
 
 <ng-template #showAddMode>
     <!--add product page-->
@@ -143,14 +144,17 @@
         </div>
     </form>
 </ng-template>
+
+
 <ng-template #showEditMode>
     <!--edit product page-->
     <form #editDataForm="ngForm" (ngSubmit)="updateData(editDataForm.value);" novalidate>
         <input type="hidden" name="_id" id="_id" [ngModel]="myDocData._id" required>
         <mat-error *ngIf="savedChanges">
             Data is saved.
-            <label class="small-spacer"></label>
-            <mat-icon (click)="this.editDataForm.reset();savedChanges=false;toggle('searchMode');">clear</mat-icon>
+            <button mat-icon-button (click)="this.editDataForm.reset();savedChanges=false;toggle('searchMode');">
+                <mat-icon>clear</mat-icon>
+            </button>
         </mat-error>
         <div *ngIf="!savedChanges">
             <mat-progress-bar mode="indeterminate" *ngIf="dataLoading"></mat-progress-bar>
@@ -213,8 +217,7 @@
             <mat-icon> </mat-icon>
             <mat-form-field appearance="outline">
                 <mat-label>Price</mat-label>
-                <input matInput placeholder="Price" name="price" id="price" [ngModel]="myDocData.price" required
-                    pattern="[0-9]+">
+                <input matInput placeholder="Price" name="price" id="price" [ngModel]="myDocData.price" required>
             </mat-form-field>
             <br>
 
@@ -238,28 +241,36 @@
         </div>
     </form>
 </ng-template>
+
+
 <ng-template #showResMode>
     <!--show product results page-->
     <div *ngIf="takeHostSelfie" width="300">
-        <button type="reset" (click)="takeHostSelfie=false;" mat-icon-button color="primary"><mat-icon>clear</mat-icon></button>
+        <button type="reset" (click)="takeHostSelfie=false;" mat-icon-button color="primary">
+            <mat-icon>clear</mat-icon>
+        </button>
         <br>
-        <fileupload fileUrl="product" docId="{{this.myDocId}}"></fileupload>
+        <app-fileupload fileUrl="products" docId="{{this.myDocId }}"></app-fileupload>
     </div>
+
     <div *ngIf="showHostSelfie" width="300">
-        <button type="reset" (click)="showHostSelfie=false;" mat-icon-button color="primary"><mat-icon>clear</mat-icon></button>
+        <button type="reset" (click)="showHostSelfie=false;" mat-icon-button color="primary">
+            <mat-icon>clear</mat-icon>
+        </button>
         <br>
-        <img [src]="profileUrl | async" width="300" height="300"/>
+        <img [src]="profileUrl | async" width="300" height="300" />
         <br>
     </div>
+
     <mat-card-actions>
         <mat-progress-bar mode="indeterminate" *ngIf="dataLoading"></mat-progress-bar>
-            <mat-error *ngIf="error" (click)="error = !error;">
-                Error: {{ errorMessage }}
-                <button mat-icon-button (click)="error = !error;">
-                    <mat-icon>clear</mat-icon>
-                </button>
-            </mat-error>
-            <br>
+        <mat-error *ngIf="error" (click)="error = !error;">
+            Error: {{ errorMessage }}
+            <button mat-icon-button (click)="error = !error;">
+                <mat-icon>clear</mat-icon>
+            </button>
+        </mat-error>
+        <br>
 
         <button mat-fab color="primary" matTooltip="Search" (click)="toggle('searchMode');">
             <mat-icon>search</mat-icon>
@@ -269,26 +280,13 @@
             <mat-icon>add</mat-icon>
         </button>
     </mat-card-actions>
-    <div *ngIf="takeHostSelfie" width="300">
-        <button type="reset" (click)="takeHostSelfie=false;" mat-icon-button color="primary">
-            <mat-icon>clear</mat-icon>
-        </button>
-        <br>
-        <fileupload fileUrl="product" docId="{{this.myDocId}}"></fileupload>
-    </div>
-    <div *ngIf="showHostSelfie" width="300">
-        <button type="reset" (click)="showHostSelfie=false;" mat-icon-button color="primary">
-            <mat-icon>clear</mat-icon>
-        </button>
-        <br>
-        <img [src]="profileUrl | async" width="300" height="300" />
-        <br>
-    </div>
+
     <div class="example-header">
         <mat-form-field>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Search Recent Results">
+            <input matInput (keyup)="applyFilter($event)" placeholder="Search Recent Results" #input>
         </mat-form-field>
     </div>
+
     <div class="example-container mat-elevation-z8">
         <mat-table [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="category">
@@ -308,18 +306,18 @@
                 <mat-cell *matCellDef="let row"> {{row.price}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="_id">
-                <mat-header-cell *matHeaderCellDef> action </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
                 <mat-cell *matCellDef="let row">
                     <button mat-icon-button matTooltip="Show Picture" *ngIf="row.path"
                         (click)="getPic(row.path);this.showHostSelfie=true;">
                         <mat-icon color="primary">photo_camera</mat-icon>
                     </button>
                     <button mat-icon-button matTooltip="Remove Picture" *ngIf="row.path"
-                        (click)="deleteProductPic(row._id);this.showHostSelfie=false;">
+                        (click)="_backendService.deleteProductPicData(row._id);showHostSelfie=false;row.path=!row.path">
                         <mat-icon color="primary">camera_roll</mat-icon>
                     </button>
                     <button mat-icon-button matTooltip="Take Picture"
-                        (click)="this.myDocId=row._id;this.takeHostSelfie=true;" class="label-error" *ngIf="!row.path"
+                        (click)="this.myDocId=row._id;takeHostSelfie=true;" class="label-error" *ngIf="!row.path"
                         class="label-error">
                         <mat-icon>camera_roll</mat-icon>
                     </button>
